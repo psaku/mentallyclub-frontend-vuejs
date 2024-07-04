@@ -92,7 +92,9 @@
 <script setup>
 import { ref } from "vue";
 import { useAccountStore } from "src/stores/account";
+import { useQuasar } from "quasar";
 
+const q = useQuasar();
 const accountStore = useAccountStore();
 const formAccount = ref({
   username: "test1",
@@ -108,6 +110,16 @@ const validPassword = ref({
 });
 const confirmpassword = ref("123456789Z@");
 const roles = ref(["Admin", "Staff"]);
+
+const showNotify = (msg) => {
+  q.notify({
+    type: "info",
+    color: "primary",
+    textColor: 'white',
+    message: msg,
+    position: 'top-right'
+  });
+};
 
 const validateEmail = (email) => {
   return /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/.test(email);
@@ -161,8 +173,9 @@ const onSubmitForm = () => {
     })
    .then(result => {
     console.log(result)
-    if (result.message == 'ok') {      
-      alert('เพิ่มเติมข้อมูลผู้ใช้ระบบชื่อ ' + formAccount.value.username + ' สำเร็จเรียบร้อย')
+    if (result.message == 'ok') {  
+      showNotify('เพิ่มเติมข้อมูลผู้ใช้ระบบชื่อ ' + formAccount.value.username + ' สำเร็จเรียบร้อย');    
+      // alert('เพิ่มเติมข้อมูลผู้ใช้ระบบชื่อ ' + formAccount.value.username + ' สำเร็จเรียบร้อย')
     }
    })
    .catch(err => {

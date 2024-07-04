@@ -47,7 +47,7 @@
           <q-card-section>
             <q-btn
               style="border-radius: 8px"
-              color="dark"
+              color="primary"
               rounded
               size="md"
               label="Sign in"
@@ -90,7 +90,7 @@ const userSignIn = async () => {
 
 <style>
 .my_card {
-  width: 35rem;
+  width: 30rem;
   border-radius: 8px;
   box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
     0 8px 10px -6px rgb(0 0 0 / 0.1);

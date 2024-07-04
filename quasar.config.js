@@ -97,7 +97,7 @@ module.exports = configure(function (/* ctx */) {
       // directives: ['CloseOverlay'],
 
       // Quasar plugins
-      plugins: []
+      plugins: ['Notify']
     },
 
     // animations: 'all', // --- includes all animations

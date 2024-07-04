@@ -1,24 +1,28 @@
 <script setup>
 import { useAccountStore } from "../stores/account";
 import { useUserStore } from "../stores/users";
-import { onMounted, onUnmounted, ref } from "vue";
-// import { useRouter } from "vue-router";
+import { onMounted, ref } from "vue";
+import { useQuasar } from "quasar";
 import CreateAccountForm from "../components/CreateAccountForm.vue";
 import EditAccountForm from "../components/EditAccountForm.vue";
 
 const accountStore = useAccountStore();
 const userStore = useUserStore();
-// const router = useRouter();
+const q = useQuasar();
 
 const loading = ref(false);
 const create_opened = ref(false);
 const edit_opened = ref(false);
+const confirm_opened = ref(false);
+const confirm_message = ref("Are you sure?");
+const user_deleted = ref("");
+
 const user = ref({
-  username: '',
-  role: '',
-  status: '',
-  email: ''
-})
+  username: "",
+  role: "",
+  status: "",
+  email: "",
+});
 
 const columns = [
   {
@@ -64,6 +68,15 @@ const columns = [
   { name: "actions", align: "right", label: "" },
 ];
 
+const showNotify = (msg) => {
+  q.notify({
+    type: "info",
+    color: 'purple',
+    textColor: 'white',
+    message: msg,
+    position: 'top-right'
+  });
+};
 onMounted(() => {
   fetchUserData();
 });
@@ -71,22 +84,18 @@ onMounted(() => {
 const onEditClose = () => {
   edit_opened.value = false;
   fetchUserData();
-}
+};
 
 const onCreateClose = () => {
   create_opened.value = false;
   fetchUserData();
-}
+};
 
 const fetchUserData = async () => {
   loading.value = true;
   await userStore.getUsers();
   loading.value = false;
 };
-
-// const gotoPage = (pagename) => {
-//   router.push({ path: pagename });
-// };
 
 const openNewUserForm = () => {
   create_opened.value = true;
@@ -98,19 +107,44 @@ const onEdit = (ev) => {
   user.value.status = ev.status;
   user.value.email = ev.email;
   edit_opened.value = true;
-//  alert(ev.username);
 };
 
-const onDelete = async (ev) => {
-  if (await userStore.deleteUser(ev.username)) {
-    alert('Delete user name: ' + ev.username + ' success!');
-    fetchUserData();
+const showConfirm = (msg) => {
+  confirm_message.value = msg;
+  confirm_opened.value = true;
+};
+
+const onConfirm = async (confirm) => {
+  if (confirm) {
+    if (await userStore.deleteUser(user_deleted.value)) {
+      showNotify("Delete user name: " + user_deleted.value + " success!");
+      fetchUserData();
+    }
   }
+  confirm_opened.value = false;
+};
+
+const onDelete = (ev) => {
+  user_deleted.value = ev.username;
+  showConfirm("คุณต้องการลบข้อมูลผู้ใช้ชื่อ " + ev.username + " ใช่หรือไม่ ?");
 };
 </script>
 
 <template>
   <div class="q-pa-md">
+    <q-dialog v-model="confirm_opened" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <q-avatar icon="check_circle" color="primary" text-color="white" />
+          <span class="q-ml-sm">{{ confirm_message }}</span>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="YES" color="primary" @click="onConfirm(true)" />
+          <q-btn flat label="NO" color="primary" @click="onConfirm(false)" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
     <q-dialog
       v-model="create_opened"
       class="column items-center justify-center"
@@ -123,8 +157,15 @@ const onDelete = async (ev) => {
       class="column items-center justify-center"
       persistent
     >
-      <edit-account-form :username="user.username" :role="user.role" :email="user.email" :status="user.status" @cancel="onEditClose()" @close="onEditClose()" />
-    </q-dialog>    
+      <edit-account-form
+        :username="user.username"
+        :role="user.role"
+        :email="user.email"
+        :status="user.status"
+        @cancel="onEditClose()"
+        @close="onEditClose()"
+      />
+    </q-dialog>
     <q-table
       flat
       bordered
