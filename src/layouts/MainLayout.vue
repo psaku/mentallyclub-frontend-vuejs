@@ -13,22 +13,11 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-      show-if-above
-      v-model="leftDrawerOpen"
-      side="left"
-      behavior="desktop"
-      bordered
-    >
+    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" behavior="desktop" bordered>
       <q-scroll-area class="fit">
         <q-list padding class="text-grey-8">
-          <q-item
-            class="GNL__drawer-item"
-            v-ripple
-            v-for="link in links1"
-            :key="link.text"
-            clickable
-          >
+          <q-item class="GNL__drawer-item" v-ripple v-for="link in links1" :key="link.text" clickable
+          v-show="link.role.toLowerCase().includes(accountStore.user.role.toLowerCase()) || link.role.toLowerCase() == 'all'">
             <q-item-section avatar>
               <q-icon :name="link.icon" />
             </q-item-section>
@@ -37,18 +26,14 @@
             </q-item-section>
           </q-item>
           <q-separator inset class="q-my-sm" />
-          <q-item
-            class="GNL__drawer-item"
-            v-ripple
-            v-for="link in logoutLink"
-            :key="link.text"
-            clickable
-          >
+          <q-item class="GNL__drawer-item" v-ripple v-for="link in logoutLink" :key="link.text" clickable
+          v-show="link.role.toLowerCase().includes(accountStore.user.role.toLowerCase()) || link.role.toLowerCase() == 'all'">
             <q-item-section avatar>
               <q-icon :name="link.icon" />
             </q-item-section>
             <q-item-section>
-              <q-item-label @click="logout()">{{ link.text }}</q-item-label>
+              <q-item-label
+                @click="logout()">{{ link.text }}</q-item-label>
             </q-item-section>
           </q-item>
         </q-list>
@@ -84,13 +69,13 @@ const logout = async () => {
 };
 
 const links1 = [
-  { icon: "account_box", text: "แก้ไขข้อมูลส่วนตัว", page: "" },
-  { icon: "people", text: "จัดการข้อมูลผู้ใช้ระบบ", page: "users" },
-  { icon: "house", text: "จัดการข้อมูลชมรม", page: "" },
-  { icon: "library_add", text: "บันทึกข้อมูลสมาชิกชมรม", page: "" },
-  { icon: "pie_chart", text: "Dashboard", page: "" },
+  { icon: "account_box", text: "แก้ไขข้อมูลส่วนตัว", page: "", role: "All" },
+  { icon: "people", text: "จัดการข้อมูลผู้ใช้ระบบ", page: "users", role: "Admin" },
+  { icon: "house", text: "จัดการข้อมูลชมรม", page: "", role: "Admin,Staff" },
+  { icon: "library_add", text: "บันทึกข้อมูลสมาชิกชมรม", page: "", role: "Admin,Staff" },
+  { icon: "pie_chart", text: "Dashboard", page: "", role: "All" },
 ];
-const logoutLink = [{ icon: "logout", text: "Logout" }];
+const logoutLink = [{ icon: "logout", text: "Logout", role: "All" }];
 </script>
 
 <style lang="sass">
@@ -125,5 +110,5 @@ const logoutLink = [{ icon: "logout", text: "Logout" }];
     font-size: .75rem
 
     &:hover
-      color: #000
+      color: #000   
 </style>

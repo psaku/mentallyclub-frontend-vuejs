@@ -27,7 +27,7 @@
           transition-show="scale"
           transition-hide="scale"
           filled
-          :options="roles"
+          :options="propertiesStore.UserRoles"
           style="width: 250px"
         />
         <q-input
@@ -92,10 +92,13 @@
 <script setup>
 import { ref } from "vue";
 import { useAccountStore } from "src/stores/account";
+import { usePropertiesStore } from "src/stores/properties"
 import { useQuasar } from "quasar";
 
 const q = useQuasar();
 const accountStore = useAccountStore();
+const propertiesStore = usePropertiesStore();
+
 const formAccount = ref({
   username: "test1",
   email: "test1@mail.com",
@@ -109,7 +112,6 @@ const validPassword = ref({
   symbol: false,
 });
 const confirmpassword = ref("123456789Z@");
-const roles = ref(["Admin", "Staff"]);
 
 const showNotify = (msg) => {
   q.notify({

@@ -28,7 +28,7 @@
           transition-show="scale"
           transition-hide="scale"
           filled
-          :options="roles"
+          :options="propertiesStore.UserRoles"
           style="width: 250px"
         />
         <q-select
@@ -37,7 +37,7 @@
           transition-show="scale"
           transition-hide="scale"
           filled
-          :options="astatus"
+          :options="propertiesStore.AccountStatus"
           style="width: 250px"
         />
       </q-card-section>
@@ -52,10 +52,16 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useAccountStore } from "src/stores/account";
+import { usePropertiesStore } from "src/stores/properties"
+import { useQuasar } from "quasar";
+
+const q = useQuasar();
 
 const props = defineProps(['username', 'email', 'role', 'status'])
 const emit = defineEmits(['close'])
 const accountStore = useAccountStore();
+const propertiesStore = usePropertiesStore();
+
 const formAccount = ref({
   username: '',
   email: '',
@@ -70,11 +76,18 @@ onMounted(()=>{
   formAccount.value.status = props.status
 });
 
-const roles = ref(["Admin", "Staff"]);
-const astatus = ref(["Active", "Canceled", "Suspended"]);
-
 const validateEmail = (email) => {
   return /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/.test(email);
+};
+
+const showNotify = (msg) => {
+  q.notify({
+    type: "info",
+    color: "primary",
+    textColor: 'white',
+    message: msg,
+    position: 'top-right'
+  });
 };
 
 const onSubmitForm = () => {
@@ -105,7 +118,7 @@ const onSubmitForm = () => {
    .then(result => {
     console.log(result)
     if (result.message == 'ok') {      
-      alert('แก้ไขข้อมูลผู้ใช้ระบบชื่อ ' + formAccount.value.username + ' สำเร็จเรียบร้อย')
+      showNotify('แก้ไขข้อมูลผู้ใช้ระบบชื่อ ' + formAccount.value.username + ' สำเร็จเรียบร้อย')
       emit('close')
     }
    })

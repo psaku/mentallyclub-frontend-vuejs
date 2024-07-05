@@ -4,7 +4,7 @@
       <q-page class="flex flex-center">
         <q-img
           src="~assets/logo.png"
-          style="height: 150px; max-width: 150px"
+          style="height: 200px; width: 200px"
         />
       </q-page>
     </q-page-container>
