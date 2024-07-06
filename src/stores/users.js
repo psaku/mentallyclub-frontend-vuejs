@@ -20,7 +20,7 @@ export const useUserStore = defineStore('users-info', {
           headers: myHeaders
         });
         if (!response.ok) {
-          throw new Error(`Error creating post: ${await response.text()}`);
+          throw new Error(`Error on selection: ${await response.text()}`);
         }
 
         // Parse JSON response and store data in array
@@ -46,7 +46,7 @@ export const useUserStore = defineStore('users-info', {
           headers: myHeaders
         });
         if (!response.ok) {
-          throw new Error(`Error creating post: ${await response.text()}`);
+          throw new Error(`Error on deletion: ${await response.text()}`);
         }
 
         // Parse JSON response and store data in array

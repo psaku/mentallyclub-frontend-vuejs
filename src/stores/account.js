@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { usePropertiesStore } from './properties';
 
 export const useAccountStore = defineStore('user-account', {
   state: () => ({
@@ -14,15 +15,16 @@ export const useAccountStore = defineStore('user-account', {
   }),
   actions: {
     async signIn(username, passwd) {
+      const propertiesStore = usePropertiesStore()
       const userInfo = {
         "username": username,
         "password": passwd,
       };
       const myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
-      
+      console.log(propertiesStore.ApiServer)
       try {
-        const response = await fetch('http://localhost:8888/api/v1/login', {
+        const response = await fetch(`${propertiesStore.ApiServer}/${propertiesStore.ApiVersion}/login`, {
           method: 'POST',
           headers: myHeaders,
           body: JSON.stringify(userInfo),
@@ -48,8 +50,9 @@ export const useAccountStore = defineStore('user-account', {
       }
     },
     async logout() {
+      const propertiesStore = usePropertiesStore()
       try {
-        const response = await fetch('http://localhost:8888/api/v1/logout',{
+        const response = await fetch(`${propertiesStore.ApiServer}/${propertiesStore.ApiVersion}/logout`,{
           method: 'GET',
           headers: { Authorization: `Bearer ${this.user.token}` }
         });

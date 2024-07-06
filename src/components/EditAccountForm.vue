@@ -42,8 +42,8 @@
         />
       </q-card-section>
       <q-card-actions align="right" style="padding-right: 15px;">
-        <q-btn icon="cancel" @click="$emit('cancel')">Cancel</q-btn>
         <q-btn icon="check_circle" color="primary" type="submit">Update</q-btn>
+        <q-btn icon="cancel" @click="$emit('cancel')">Cancel</q-btn>
       </q-card-actions>
     </q-form>
   </q-card>
@@ -108,7 +108,7 @@ const onSubmitForm = () => {
     redirect: 'follow'
   };
   console.log(body);
-  fetch("http://localhost:8888/api/v1/users", requestOptions)
+  fetch(`${propertiesStore.ApiServer}/${propertiesStore.ApiVersion}/users`, requestOptions)
    .then(response => {
       if (!response.ok) {
          throw new Error("Server Status: " + response.status);

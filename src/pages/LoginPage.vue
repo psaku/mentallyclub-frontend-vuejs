@@ -33,7 +33,7 @@
               dense
               outlined
               v-model="username"
-              label="User account"
+              label="Account name:"
             ></q-input>
             <q-input
               dense
