@@ -146,6 +146,7 @@ const validatePassword = (val) => {
     validPassword.value.symbol
   );
 };
+const onCancel = () => {}
 
 const onSubmitForm = () => {
   var myHeaders = new Headers();

@@ -89,7 +89,7 @@ const showNotify = (msg) => {
     position: 'top-right'
   });
 };
-
+const onCancel = () => {}
 const onSubmitForm = () => {
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");

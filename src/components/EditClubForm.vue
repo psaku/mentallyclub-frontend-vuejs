@@ -135,7 +135,7 @@ const formatDate = (dateString) => {
 
     return `${year}-${month}-${day}`;
 }
-
+const onCancel = () => {}
 const currentDate = () => {
     let ts = Date.now();
     let date_time = new Date(ts);

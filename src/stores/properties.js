@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 
 export const usePropertiesStore = defineStore('properties-info', {
   state: () => ({
-    ApiServer: 'http://localhost:8888',
+    ApiServer: 'http://192.168.1.15:8888',
     ApiVersion: 'api/v1',
     UserRoles: ['Admin', 'Staff'],
     AccountStatus: ['Active', 'Suspended', 'Canceled'],

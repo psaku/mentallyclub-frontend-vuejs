@@ -133,7 +133,7 @@ const onSelectAddress = (address) => {
     formClub.value.province = address.ProvinceThai;
     formClub.value.district = address.DistrictThai;
 };
-
+const onCancel = () => {}
 const onSubmitForm = () => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
