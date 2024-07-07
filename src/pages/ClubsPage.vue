@@ -2,8 +2,9 @@
 import { useAccountStore } from "../stores/account";
 import { onMounted, ref } from "vue";
 import { useQuasar } from "quasar";
-import { useClubStore } from "src/stores/clubs";
+import { useClubStore } from "../stores/clubs";
 import CreateClubForm from "../components/CreateClubForm.vue";
+import EditClubForm from "../components/EditClubForm.vue";
 
 const accountStore = useAccountStore();
 const clubStore = useClubStore();
@@ -29,6 +30,8 @@ const club = ref({
   clubfoundingdate: "",
   clubpresidentid: ""
 });
+
+const visibleColumns = ref(['clubid','clubname','homeno','moo', 'tambon', 'district','province','phoneno','clubfoundingdate','zipcode','actions'])
 
 const columns = [
   {
@@ -96,10 +99,26 @@ const columns = [
     headerStyle: "font-weight: bold; font-size: 14px",
   },
   {
+    name: "phoneno",
+    align: "left",
+    label: "เบอร์โทรศัพท์",
+    field: "phoneno",
+    sortable: true,
+    headerStyle: "font-weight: bold; font-size: 14px",
+  },
+  {
     name: "clubfoundingdate",
     align: "left",
     label: "วันที่ก่อตั้ง",
     field: "clubfoundingdate",
+    sortable: true,
+    headerStyle: "font-weight: bold; font-size: 14px",
+  },
+  {
+    name: "clubpresidentid",
+    align: "left",
+    label: "ประธานชมรม",
+    field: "clubpresidentid",
     sortable: true,
     headerStyle: "font-weight: bold; font-size: 14px",
   },
@@ -141,8 +160,18 @@ const openNewClubForm = () => {
 };
 
 const onEdit = (ev) => {
+  console.log(ev)
   club.value.clubid = ev.clubid;
-
+  club.value.clubname = ev.clubname;
+  club.value.clubfoundingdate = ev.clubfoundingdate;
+  club.value.homeno = ev.homeno;
+  club.value.moo = ev.moo;
+  club.value.tambon = ev.tambon;
+  club.value.district = ev.district;
+  club.value.province = ev.province;
+  club.value.phoneno = ev.phoneno;
+  club.value.zipcode = ev.zipcode;
+  club.value.clubpresidentid = ev.clubpresidentid;
   edit_opened.value = true;
 };
 
@@ -183,37 +212,17 @@ const onDelete = (ev) => {
         </q-card-actions>
       </q-card>
     </q-dialog>
-    <q-dialog
-      v-model="create_opened"
-      class="column items-center justify-center"
-      persistent
-    >
+    <q-dialog v-model="create_opened" class="column items-center justify-center" persistent>
       <create-club-form @cancel="onCreateClose()" />
     </q-dialog>
-    <q-dialog
-      v-model="edit_opened"
-      class="column items-center justify-center"
-      persistent
-    >
-      <edit-club-form
-        :clubname="club.clubname"
-
-        @cancel="onEditClose()"
-        @close="onEditClose()"
-      />
+    <q-dialog v-model="edit_opened" class="column items-center justify-center" persistent>
+      <edit-club-form :clubid="club.clubid" :clubname="club.clubname" :homeno="club.homeno" :moo="club.moo"
+        :tambon="club.tambon" :district="club.district" :province="club.province" :zipcode="club.zipcode"
+        :phoneno="club.phoneno" :clubfoundingdate="club.clubfoundingdate" :clubpresidentid="club.clubpresidentid"
+        @cancel="onEditClose()" @close="onEditClose()" />
     </q-dialog>
-    <q-table
-      flat
-      bordered
-      title="รายการข้อมูลชมรม"
-      title-class="text-grey-10"
-      :rows="clubStore.listclubs"
-      :columns="columns"
-      color="primary"
-      table-header-class="text-grey-9 bg-grey-2"
-      row-key="name"
-      :loading="loading"
-    >
+    <q-table flat bordered title="รายการข้อมูลชมรม" title-class="text-grey-10" :rows="clubStore.listclubs" :visible-columns="visibleColumns"
+      :columns="columns" color="primary" table-header-class="text-grey-9 bg-grey-2" row-key="name" :loading="loading">
       <template v-slot:top-left>
         <q-icon name="house" style="font-size: 30px; margin-left: 5px" />
         <div style="font-size: 18px; margin-left: 5px">
@@ -222,13 +231,7 @@ const onDelete = (ev) => {
       </template>
       <!-- Add button slot -->
       <template v-slot:top-right>
-        <q-btn
-          @click="openNewClubForm()"
-          icon="add_circle"
-          size="14px"
-          color="primary"
-          label="Add"
-        >
+        <q-btn @click="openNewClubForm()" icon="add_circle" size="14px" color="primary" label="Add">
         </q-btn>
       </template>
 

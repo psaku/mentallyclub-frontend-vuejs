@@ -1,9 +1,9 @@
 <template>
     <div class="q-pa-md">
         <div class="q-gutter-md row items-start">
-            <q-card class="create-form-card">
-                <q-card-section class="bg-primary text-grey-2 q-pa-md">
-                    <div class="text-h6">เพิ่มเติมข้อมูลชมรม</div>
+            <q-card class="edit-form-card">
+                <q-card-section class="bg-grey-4 q-pa-md">
+                    <div class="text-h6">แก้ไขข้อมูลชมรม</div>
                 </q-card-section>
                 <q-separator inset />
                 <q-form @submit="onSubmitForm" class="q-gutter-y-md">
@@ -12,7 +12,7 @@
                             (val) => (val && val.length > 0) || 'Name must be filled in.',
                         ]" />
                         <q-input v-model="formClub.clubfoundingdate" label="วันที่ก่อตั้งชมรม" mask="####-##-##"
-                            hint="Mask: YYYY-MM-DD">
+                        hint="Mask: YYYY-MM-DD">
                             <template v-slot:append>
                                 <q-icon name="event" class="cursor-pointer">
                                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -62,30 +62,30 @@
                         </div>
                     </q-card-section>
                     <q-card-actions align="right" style="padding-right: 15px;">
-                        <q-btn icon="check_circle" color="primary" type="submit">Submit</q-btn>
+                        <q-btn icon="check_circle" color="primary" type="submit">Update</q-btn>
                         <q-btn icon="cancel" @click="$emit('cancel')">Cancel</q-btn>
                     </q-card-actions>
                 </q-form>
-
             </q-card>
         </div>
     </div>
-
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
-import { useAccountStore } from "src/stores/account";
-import { usePropertiesStore } from "src/stores/properties";
+import { ref, onMounted } from "vue";
+import { useAccountStore } from "../stores/account";
+import { usePropertiesStore } from "../stores/properties";
 import { useQuasar } from "quasar";
+import axios from "axios";
 
-import axios from 'axios';
 const addresses = ref([]);
-
+const props = defineProps(['clubid', 'clubname', 'clubfoundingdate', 'homeno', 'moo', 'tambon', 'district', 'province', 'phoneno', 'zipcode', 'clubpresidentid'])
+const emit = defineEmits(['close'])
 const q = useQuasar();
 const accountStore = useAccountStore();
 const propertiesStore = usePropertiesStore();
 const formClub = ref({
+    clubid: '',
     clubname: '',
     homeno: '',
     moo: '',
@@ -94,14 +94,26 @@ const formClub = ref({
     province: '',
     zipcode: '',
     phoneno: '',
-    faxno: '',
     clubfoundingdate: '',
     clubpresidentid: ''
 });
 
-onMounted(()=>{
-    formClub.value.clubfoundingdate = currentDate();
-})
+onMounted(() => {
+    console.log('zipcode=', props.zipcode)
+    console.log('clubname=', props.clubname)
+    formClub.value.clubid = props.clubid
+    formClub.value.clubname = props.clubname
+    formClub.value.homeno = props.homeno
+    formClub.value.moo = props.moo
+    formClub.value.tambon = props.tambon
+    formClub.value.district = props.district
+    formClub.value.province = props.province
+    formClub.value.phoneno = props.phoneno
+    formClub.value.zipcode = props.zipcode
+    formClub.value.clubfoundingdate = formatDate(props.clubfoundingdate)
+    formClub.value.clubpresidentid = props.clubpresidentid
+    console.log(formClub)
+});
 
 const showNotify = (msg) => {
     q.notify({
@@ -111,6 +123,17 @@ const showNotify = (msg) => {
         message: msg,
         position: 'top-right'
     });
+}
+
+const formatDate = (dateString) => {
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
 }
 
 const currentDate = () => {
@@ -140,6 +163,7 @@ const onSubmitForm = () => {
     myHeaders.append("Authorization", "Bearer " + accountStore.user.token)
     // console.log("Date: ", formClub.value.clubfoundingdate)
     var body = JSON.stringify({
+        "clubid": formClub.value.clubid,
         "clubname": formClub.value.clubname,
         "clubfoundingdate": (formClub.value.clubfoundingdate == "" ? currentDate() : formClub.value.clubfoundingdate),
         "homeno": formClub.value.homeno,
@@ -152,7 +176,7 @@ const onSubmitForm = () => {
         "clubpresidentid": formClub.value.clubpresidentid
     });
     var requestOptions = {
-        method: 'POST',
+        method: 'PUT',
         headers: myHeaders,
         body: body,
         redirect: 'follow'
@@ -166,9 +190,10 @@ const onSubmitForm = () => {
             return response.json()
         })
         .then(result => {
-            console.log(result)
+            //            console.log(result)
             if (result.message == 'ok') {
-                showNotify('เพิ่มเติมข้อมูลชมรมชื่อ ' + formClub.value.clubname + ' สำเร็จเรียบร้อย');
+                showNotify('แก้ไขข้อมูลชมรม ' + formClub.value.clubname + ' สำเร็จเรียบร้อย');
+                emit('close')
             }
         })
         .catch(err => {
@@ -180,7 +205,7 @@ const onSubmitForm = () => {
 </script>
 
 <style lang="scss">
-.create-form-card {
+.edit-form-card {
     width: 640px;
     padding-bottom: 5px;
 }

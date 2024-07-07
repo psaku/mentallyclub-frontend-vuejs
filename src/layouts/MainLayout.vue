@@ -24,7 +24,7 @@
                 <q-item-section>
                   <div>
                     <q-icon name="account_box" color="blue-9" size="18px" />
-                    Your profile
+                    แก้ไขข้อมูลส่วนตัว
                   </div>
                 </q-item-section>
               </q-item>
@@ -33,7 +33,7 @@
                 <q-item-section>
                   <div>
                     <q-icon name="logout" color="blue-9" size="18px" />
-                    Logout
+                    ออกจากระบบ
                   </div>
                 </q-item-section>
               </q-item>
@@ -100,13 +100,13 @@ const logout = async () => {
 };
 
 const links1 = [
-  { icon: "people", text: "จัดการข้อมูลผู้ใช้ระบบ", page: "users", role: "Admin" },
-  { icon: "house", text: "จัดการข้อมูลชมรม", page: "clubs", role: "Admin,Staff" },
-  { icon: "library_add", text: "บันทึกข้อมูลสมาชิกชมรม", page: "", role: "Admin,Staff" },
+  { icon: "people", text: "จัดการข้อมูลผู้ใช้ระบบ (Accounts)", page: "users", role: "Admin" },
+  { icon: "house", text: "จัดการข้อมูลชมรม (Clubs)", page: "clubs", role: "Admin,Staff" },
+  { icon: "library_add", text: "บันทึกข้อมูลสมาชิกชมรม (Club Members)", page: "", role: "Admin,Staff" },
   { icon: "library_add", text: "บันทึกข้อมูลกรรมการและที่ปรึกษาชมรม", page: "", role: "Admin,Staff" },
   { icon: "pie_chart", text: "Dashboard", page: "", role: "All" },
 ];
-const logoutLink = [{ icon: "logout", text: "Logout", role: "All" }];
+const logoutLink = [{ icon: "logout", text: "ออกจากระบบ (Logout)", role: "All" }];
 </script>
 
 <style lang="sass">

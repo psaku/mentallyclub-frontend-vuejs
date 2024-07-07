@@ -1,6 +1,6 @@
 <template>
   <q-card class="edit-account-card">
-    <q-card-section>
+    <q-card-section class="bg-grey-4 q-pa-md">
       <div class="text-h6">Edit User Account</div>
       <div class="text-subtitle1">
         Fill out the following form to update your account.
@@ -51,8 +51,8 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { useAccountStore } from "src/stores/account";
-import { usePropertiesStore } from "src/stores/properties"
+import { useAccountStore } from "../stores/account";
+import { usePropertiesStore } from "../stores/properties"
 import { useQuasar } from "quasar";
 
 const q = useQuasar();
@@ -107,7 +107,7 @@ const onSubmitForm = () => {
     body: body,
     redirect: 'follow'
   };
-  console.log(body);
+//  console.log(body);
   fetch(`${propertiesStore.ApiServer}/${propertiesStore.ApiVersion}/users`, requestOptions)
    .then(response => {
       if (!response.ok) {
@@ -116,7 +116,7 @@ const onSubmitForm = () => {
       return response.json()
     })
    .then(result => {
-    console.log(result)
+//    console.log(result)
     if (result.message == 'ok') {      
       showNotify('แก้ไขข้อมูลผู้ใช้ระบบชื่อ ' + formAccount.value.username + ' สำเร็จเรียบร้อย')
       emit('close')

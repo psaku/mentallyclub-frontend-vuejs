@@ -6,20 +6,7 @@ export const useClubStore = defineStore('clubs-info', {
     listclubs: []
   }),
   actions: {
-
-    adjustUTCDate(utcdate) {
-      if (utcdate.endsWith('Z')) {
-        // เป็น UTC
-        const localDate = new Date(utcdate).toLocaleString("en-US", { timeZone: "Asia/Bangkok" });
-        const formattedDate = new Date(localDate).toISOString().slice(0, 10);
-        //        console.log(formattedDate); // Output: "2024-07-06"
-      } else {
-        // ไม่ใช่ UTC
-        const formattedDate = new Date(utcdate).toISOString().slice(0, 10);
-        //        console.log(formattedDate); // Output: "2024-07-05"
-      }
-      return formattedDate;
-    },
+    
     async getClubs() {
       const propertiesStore = usePropertiesStore()
       const userprofile = await localStorage.getItem('user-profile');
@@ -40,7 +27,7 @@ export const useClubStore = defineStore('clubs-info', {
 
         // Parse JSON response and store data in array
         const clubData = await response.json();
-        console.log('club data=',this.listclubs)
+//        console.log('club data=',this.listclubs)
         this.listclubs = clubData.message.map(club => ({
           clubid: club.ClubID,
           clubname: club.ClubName,
@@ -54,7 +41,7 @@ export const useClubStore = defineStore('clubs-info', {
           clubfoundingdate: club.ClubFoundingDate,
           clubpresidentid: club.ClubPresidentID,
         })); // Handle potential message structure
-        console.log('listclubs=',this.listclubs)
+//        console.log('listclubs=',this.listclubs)
       } catch (error) {
         console.log(error)
       }

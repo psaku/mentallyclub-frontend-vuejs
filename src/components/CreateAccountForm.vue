@@ -1,6 +1,6 @@
 <template>
   <q-card class="create-account-card">
-    <q-card-section>
+    <q-card-section class="bg-primary text-grey-2 q-pa-md">
       <div class="text-h6">Create New Account</div>
       <div class="text-subtitle1">
         Fill out the following form to create your new account.
