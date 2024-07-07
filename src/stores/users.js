@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { usePropertiesStore } from './properties';
 
 export const useUserStore = defineStore('users-info', {
   state: () => ({
@@ -6,7 +7,7 @@ export const useUserStore = defineStore('users-info', {
   }),
   actions: {
     async getUsers() {
-      
+      const propertiesStore = usePropertiesStore();
       const userprofile = await localStorage.getItem('user-profile');
       const jsondata = JSON.parse(userprofile);
       //console.log('token', jsondata.token);
@@ -15,7 +16,7 @@ export const useUserStore = defineStore('users-info', {
       myHeaders.append("Authorization", `Bearer ${jsondata.token}`);
 
       try {
-        const response = await fetch('http://localhost:8888/api/v1/users', {
+        const response = await fetch(`${propertiesStore.ApiServer}/${propertiesStore.ApiVersion}/users`, {
           method: 'GET',
           headers: myHeaders
         });
@@ -25,14 +26,14 @@ export const useUserStore = defineStore('users-info', {
 
         // Parse JSON response and store data in array
         const userData = await response.json();
-        this.listusers = userData.message.map(user=>({id: user.UserID, username: user.Username, role: user.Role, email: user.Email, status: user.Status})); // Handle potential message structure
+        this.listusers = userData.message.map(user=>({id: user.UserID, username: user.Username, role: user.Role, email: user.Email, status: user.Status, lastaccessed: user.LastAccessed})); // Handle potential message structure
         //console.log(this.listusers)
       } catch (error) {
         console.log(error)
       }
     },
     async deleteUser(name) {
-      
+      const propertiesStore = usePropertiesStore();
       const userprofile = await localStorage.getItem('user-profile');
       const jsondata = JSON.parse(userprofile);
       //console.log('token', jsondata.token);
@@ -41,7 +42,7 @@ export const useUserStore = defineStore('users-info', {
       myHeaders.append("Authorization", `Bearer ${jsondata.token}`);
 
       try {
-        const response = await fetch('http://localhost:8888/api/v1/users/'+name, {
+        const response = await fetch(`${propertiesStore.ApiServer}/${propertiesStore.ApiVersion}/users/${name}`, {
           method: 'DELETE',
           headers: myHeaders
         });

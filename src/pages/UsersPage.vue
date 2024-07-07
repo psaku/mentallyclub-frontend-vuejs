@@ -36,7 +36,7 @@ const columns = [
   {
     name: "Username",
     align: "left",
-    label: "User name",
+    label: "ชื่อผู้ใช้",
     field: "username",
     sortable: true,
     headerStyle: "font-weight: bold; font-size: 14px",
@@ -44,7 +44,7 @@ const columns = [
   {
     name: "Role",
     align: "center",
-    label: "Role",
+    label: "บทบาท/หน้าที่",
     field: "role",
     sortable: true,
     headerStyle: "font-weight: bold; font-size: 14px",
@@ -60,8 +60,16 @@ const columns = [
   {
     name: "Status",
     align: "center",
-    label: "Status",
+    label: "สถานะ",
     field: "status",
+    sortable: true,
+    headerStyle: "font-weight: bold; font-size: 14px",
+  },
+  {
+    name: "Status",
+    align: "center",
+    label: "เข้าใช้งานล่าสุด",
+    field: "lastaccessed",
     sortable: true,
     headerStyle: "font-weight: bold; font-size: 14px",
   },

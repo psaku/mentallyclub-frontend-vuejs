@@ -10,7 +10,8 @@ export const useAccountStore = defineStore('user-account', {
       token: '',
       email: '',
       role: '',
-      id: ''
+      id: '',
+      lastaccessed:''
     }
   }),
   actions: {
@@ -42,6 +43,7 @@ export const useAccountStore = defineStore('user-account', {
         this.user.token = res.token
         this.user.email = res.email
         this.user.role = res.role
+        this.user.lastaccessed = res.lastaccessed
         localStorage.setItem('user-profile', JSON.stringify(this.user))
         //console.log(this.user)
       } catch (error) {
