@@ -103,7 +103,7 @@ const links1 = [
   { icon: "people", text: "จัดการข้อมูลผู้ใช้ระบบ (Accounts)", page: "users", role: "Admin" },
   { icon: "house", text: "จัดการข้อมูลชมรม (Clubs)", page: "clubs", role: "Admin,Staff" },
   { icon: "library_add", text: "บันทึกข้อมูลสมาชิกชมรม (Club Members)", page: "", role: "Admin,Staff" },
-  { icon: "library_add", text: "บันทึกข้อมูลกรรมการและที่ปรึกษาชมรม", page: "", role: "Admin,Staff" },
+  { icon: "library_add", text: "บันทึกข้อมูลกรรมการและที่ปรึกษาชมรม", page: "committees", role: "Admin,Staff" },
   { icon: "pie_chart", text: "Dashboard", page: "", role: "All" },
 ];
 const logoutLink = [{ icon: "logout", text: "ออกจากระบบ (Logout)", role: "All" }];
