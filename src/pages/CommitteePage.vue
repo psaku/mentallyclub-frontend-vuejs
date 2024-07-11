@@ -33,15 +33,15 @@
                                             <q-input v-model="committeeRecord.clubid" label="รหัสชมรม" readonly />
                                         </div>
                                         <div class="col-12 col-md-4">
-                                            <q-input v-model="searchedclubName" label="ชื่อชมรม/สมาคม" hint="โปรดระบุชื่อชมรม/สมาคม">
+                                            <q-input v-model="searchedclubName" label="ชื่อชมรม/สมาคม"
+                                                hint="โปรดระบุชื่อชมรม/สมาคม">
                                                 <template v-slot:append>
                                                     <q-icon name="search" @click="fetchClubName" />
                                                     <q-menu touch-position transition-show="scale"
                                                         transition-hide="scale" class="my-popup-width">
                                                         <q-list class="my-popup-width">
-                                                            <q-item clickable v-close-popup
-                                                                v-for="item in clubname" :key="item"
-                                                                @click="onSelectClub(item)">
+                                                            <q-item clickable v-close-popup v-for="item in clubname"
+                                                                :key="item" @click="onSelectClub(item)">
                                                                 <q-item-section v-for="(value, key) in item" :key="key">
                                                                     {{ value }}
                                                                     <q-separator />
@@ -53,11 +53,11 @@
                                             </q-input>
                                         </div>
                                         <div class="col-12 col-md-4">
-                                            <q-select label="ตำแหน่งในชมรม" v-model="committeeRecord.reponsibility"
+                                            <q-select label="ตำแหน่งในชมรม" v-model="committeeRecord.responsibility"
                                                 transition-show="scale" transition-hide="scale" filled
                                                 :options="propertiesStore.ResponseType"
                                                 style="width: auto; padding-top: 2px;" />
-                                            <!-- <q-input v-model="committeeRecord.reponsibility" label="ตำแหน่งในชมรม" readonly /> -->
+                                            <!-- <q-input v-model="committeeRecord.responsibility" label="ตำแหน่งในชมรม" readonly /> -->
                                         </div>
                                     </div>
 
@@ -338,6 +338,10 @@
                                         <q-inner-loading showing color="primary" />
                                     </template>
                                 </q-table>
+                                <q-card-actions align="right" style="padding: 15px;">
+                                    <q-btn icon="check_circle" color="primary" type="submit">Submit</q-btn>
+                                    <q-btn icon="cancel" @click="$emit('cancel')">Cancel</q-btn>
+                                </q-card-actions>
                             </q-tab-panel>
                         </q-tab-panels>
                     </q-form>
@@ -397,16 +401,18 @@ import { ref } from 'vue';
 import { useQuasar } from 'quasar';
 import { usePropertiesStore } from 'src/stores/properties';
 import { useClubStore } from 'src/stores/clubs';
+import { useAccountStore } from 'src/stores/account';
 import axios from 'axios';
 
+const accountStore = useAccountStore();
 const propertiesStore = usePropertiesStore();
 const clubStore = useClubStore();
-const $q = useQuasar();
+const q = useQuasar();
 const useCurrentAddressToContact = ref(false)
 const eduDialog = ref(false)
 const expDialog = ref(false)
 const talentDialog = ref(false)
-const searchedclubName = ref('')
+const searchedclubName = ref('ทดสอบ')
 const searchedcommitteeName = ref('')
 const newEducation = ref({ educationlevel: '', major: '', graduatedyear: '', institute: '' });
 const newExperience = ref({ responsibility: '', duration: '', organization: '' });
@@ -420,31 +426,31 @@ const panel = ref('tab1')
 const committeeRecord = ref({
     committeeid: '',
     clubid: '',
-    name: '',
-    surname: '',
+    name: 'นาย ก',
+    surname: 'นามสกุล ข',
     nationality: 'ไทย',
     ethnicity: 'ไทย',
-    personalstatus: '',
-    birthdate: '',
-    licenseno: '',
-    licensecardissueddate: '',
-    licensecardexpireddate: '',
-    licensecardissuedplace: '',
-    phoneno: '',
-    email: '',
-    faxno: '',
-    fathername: '',
-    mothername: '',
-    disabilitycardno: '',
-    relatedmemberid: '',
-    fatheroccupation: '',
-    motheroccupation: '',
-    reponsibility: '',
+    personalstatus: 'โสด',
+    birthdate: '2000-07-02',
+    licenseno: '1111111111119',
+    licensecardissueddate: '2024-07-01',
+    licensecardexpireddate: '2024-07-30',
+    licensecardissuedplace: 'ที่ว่าการอำเภอแห่งหนึ่ง',
+    phoneno: '0891234567',
+    email: 'nineko@gmail.com',
+    faxno: '-',
+    fathername: 'นายพ่อ',
+    mothername: 'นายแม่',
+    disabilitycardno: '-',
+    relatedmemberid: '-',
+    fatheroccupation: 'ทำไร่',
+    motheroccupation: 'ค้าขาย',
+    responsibility: '',
     religion: 'พุทธ',
-    fatherage: '',
-    motherage: '',
-    homeno: '',
-    moo: '',
+    fatherage: '50',
+    motherage: '50',
+    homeno: '1',
+    moo: '2',
     tambon: '',
     district: '',
     province: '',
@@ -455,8 +461,8 @@ const committeeRecord = ref({
     alternativedistrict: '',
     alternativeprovince: '',
     alternativezipcode: '',
-    disabledpersonnameincare: '',
-    occupation: '',
+    disabledpersonnameincare: '-',
+    occupation: 'ค้าขาย',
     educations: [],
     experiences: [],
     talents: []
@@ -543,6 +549,16 @@ const talentColumns = [
     { name: "actions", align: "right", label: "" }
 ]
 
+const showNotify = (msg) => {
+    q.notify({
+        type: "info",
+        color: "primary",
+        textColor: 'white',
+        message: msg,
+        position: 'top-right'
+    });
+}
+
 const addEducation = async () => {
     eduDialog.value = true;
 }
@@ -597,7 +613,7 @@ const fetchClubName = async () => {
     try {
         const response = await clubStore.getClubByName(searchedclubName.value);
         clubname.value = clubStore.listclubname;
-//        console.log('club name:', clubname.value)
+        //        console.log('club name:', clubname.value)
     } catch (err) {
         clubname.value = []
         alert(err)
@@ -645,6 +661,70 @@ const onSubmitForm = () => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     myHeaders.append("Authorization", "Bearer " + accountStore.user.token)
+
+    var body = JSON.stringify({
+        "clubid": committeeRecord.value.clubid,
+        "name": committeeRecord.value.name,
+        "surname": committeeRecord.value.surname,
+        "nationality": committeeRecord.value.nationality,
+        "ethnicity": committeeRecord.value.ethnicity,
+        "personalstatus": committeeRecord.value.personalstatus,
+        "licenseno": committeeRecord.value.licenseno,
+        "licensecardissueddate": committeeRecord.value.licensecardissueddate,
+        "licensecardexpireddate": committeeRecord.value.licensecardexpireddate,
+        "phoneno": committeeRecord.value.phoneno,
+        "faxno": committeeRecord.value.faxno,
+        "fathername": committeeRecord.value.fathername,
+        "mothername": committeeRecord.value.mothername,
+        "disabilitycardno": committeeRecord.value.disabilitycardno,
+        "fatheroccupation": committeeRecord.value.fatheroccupation,
+        "motheroccupation": committeeRecord.value.motheroccupation,
+        "responsibility": committeeRecord.value.responsibility,
+        "religion": committeeRecord.value.religion,
+        "fatherage": committeeRecord.value.fatherage,
+        "motherage": committeeRecord.value.motherage,
+        "homeno": committeeRecord.value.homeno,
+        "moo": committeeRecord.value.moo,
+        "tambon": committeeRecord.value.tambon,
+        "district": committeeRecord.value.district,
+        "province": committeeRecord.value.province,
+        "zipcode": committeeRecord.value.zipcode,
+        "alternativehomeno": committeeRecord.value.alternativehomeno,
+        "alternativemoo": committeeRecord.value.alternativemoo,
+        "alternativetambon": committeeRecord.value.alternativetambon,
+        "alternativedistrict": committeeRecord.value.alternativedistrict,
+        "alternativeprovince": committeeRecord.value.alternativeprovince,
+        "alternativezipcode": committeeRecord.value.alternativezipcode,
+        "birthdate": committeeRecord.value.birthdate,
+        "licensecardissuedplace": committeeRecord.value.licensecardissuedplace,
+        "disabledpersonnameincare": committeeRecord.value.disabledpersonnameincare,
+        "occupation": committeeRecord.value.occupation,
+        "educations": educationList.value,
+        "experiences": experienceList.value,
+        "talents": talentList.value
+    });
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: body,
+        redirect: 'follow'
+    };
+    fetch(`${propertiesStore.ApiServer}/${propertiesStore.ApiVersion}/committees`, requestOptions)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Server Status: " + response.status);
+            }
+            return response.json()
+        })
+        .then(result => {
+            if (result.message == 'ok') {
+                showNotify('เพิ่มเติมข้อมูลชมรมชื่อ ' + committeeRecord.value.name + ' สำเร็จเรียบร้อย');
+            }
+        })
+        .catch(err => {
+            console.log(err)
+            alert(err)
+        });
 }
 
 </script>

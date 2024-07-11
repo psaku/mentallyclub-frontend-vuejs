@@ -12,7 +12,7 @@
                             (val) => (val && val.length > 0) || 'Name must be filled in.',
                         ]" />
                         <q-input v-model="formClub.clubfoundingdate" label="วันที่ก่อตั้งชมรม" mask="####-##-##"
-                        hint="Mask: YYYY-MM-DD">
+                        hint="Mask: YYYY-MM-DD" style="width: auto">
                             <template v-slot:append>
                                 <q-icon name="event" class="cursor-pointer">
                                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">

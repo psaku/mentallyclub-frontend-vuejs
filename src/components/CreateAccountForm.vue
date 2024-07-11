@@ -166,7 +166,7 @@ const onSubmitForm = () => {
     body: body,
     redirect: 'follow'
   };
-  console.log(body);
+//  console.log(body);
   fetch(`${propertiesStore.ApiServer}/${propertiesStore.ApiVersion}/users`, requestOptions)
    .then(response => {
       if (!response.ok) {

@@ -1,7 +1,7 @@
 <template>
   <q-layout view="hHh lpR fFf" class="bg-grey-1">
     <q-header elevated class="bg-white text-grey-8">
-      <q-toolbar class="GNL__toolbar">
+      <q-toolbar class="GNL__toolbar bg-grey-1">
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
 
         <q-toolbar-title>
@@ -13,10 +13,9 @@
         <q-space />
         <q-btn round flat>
           <q-avatar class="bg-grey-4" size="34px">
-            <q-icon name="person" color="blue-9" />
-            <!-- <img src="https://cdn.quasar.dev/img/boy-avatar.png"> -->
+            <q-icon name="person" color="blue-9" />            
           </q-avatar>
-          <!-- <span class="q-mr-xl q-ml-sm">{{ accountStore.user.username  }}</span>           -->
+          
           <q-tooltip>Account</q-tooltip>
           <q-menu auto-close>
             <q-list dense style="min-width: 150px">
@@ -45,7 +44,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" behavior="desktop" bordered>
+    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" behavior="desktop" bordered class="bg-grey-2">
       <q-scroll-area class="fit">
         <q-list padding class="text-grey-8">
           <q-item class="GNL__drawer-item" v-ripple v-for="link in links1" :key="link.text" clickable
@@ -103,7 +102,7 @@ const links1 = [
   { icon: "people", text: "จัดการข้อมูลผู้ใช้ระบบ (Accounts)", page: "users", role: "Admin" },
   { icon: "house", text: "จัดการข้อมูลชมรม (Clubs)", page: "clubs", role: "Admin,Staff" },
   { icon: "library_add", text: "บันทึกข้อมูลสมาชิกชมรม (Club Members)", page: "", role: "Admin,Staff" },
-  { icon: "library_add", text: "บันทึกข้อมูลกรรมการและที่ปรึกษาชมรม", page: "committees", role: "Admin,Staff" },
+  { icon: "library_add", text: "บันทึกข้อมูลกรรมการและที่ปรึกษาชมรม (Committee)", page: "committees", role: "Admin,Staff" },
   { icon: "pie_chart", text: "Dashboard", page: "", role: "All" },
 ];
 const logoutLink = [{ icon: "logout", text: "ออกจากระบบ (Logout)", role: "All" }];
