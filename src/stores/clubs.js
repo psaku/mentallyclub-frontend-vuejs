@@ -3,7 +3,8 @@ import { usePropertiesStore } from './properties';
 
 export const useClubStore = defineStore('clubs-info', {
   state: () => ({
-    listclubs: []
+    listclubs: [],
+    listclubname: []
   }),
   actions: {
     
@@ -40,6 +41,36 @@ export const useClubStore = defineStore('clubs-info', {
           phoneno: club.PhoneNo,
           clubfoundingdate: club.ClubFoundingDate,
           clubpresidentid: club.ClubPresidentID,
+        })); // Handle potential message structure
+//        console.log('listclubs=',this.listclubs)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async getClubByName(name) {
+      const propertiesStore = usePropertiesStore()
+      const userprofile = await localStorage.getItem('user-profile');
+      const jsondata = JSON.parse(userprofile);
+      //console.log('token', jsondata.token);
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      myHeaders.append("Authorization", `Bearer ${jsondata.token}`);
+
+      try {
+        const response = await fetch(`${propertiesStore.ApiServer}/${propertiesStore.ApiVersion}/clubsbyname/${name}`, {
+          method: 'GET',
+          headers: myHeaders
+        });
+        if (!response.ok) {
+          throw new Error(`Error on selection: ${await response.text()}`);
+        }
+
+        // Parse JSON response and store data in array
+        const clubData = await response.json();
+        this.listclubname = clubData.message.map(club => ({
+          clubid: club.ClubID,
+          clubname: club.ClubName,
+          province: club.Province
         })); // Handle potential message structure
 //        console.log('listclubs=',this.listclubs)
       } catch (error) {

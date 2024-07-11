@@ -7,7 +7,7 @@
                     <q-toolbar-title>บันทึกข้อมูลกรรมการและที่ปรึกษา</q-toolbar-title>
                     <q-space />
                     <div class="q-pl-sm toolbar-input-btn row no-wrap">
-                        <q-input dense v-model="search" placeholder="Search name" class="bg-white col" />
+                        <q-input dense v-model="searchedcommitteeName" placeholder="Search name" class="bg-white col" />
                         <!-- <q-btn color="grey-3" text-color="grey-8" icon="search" unelevated /> -->
                         <q-btn flat round dense icon="search" class="q-mr-xs" />
                     </div>
@@ -18,7 +18,7 @@
 
             <q-page-container>
                 <q-page class="q-pa-md">
-                    <q-form class="q-col-gutter-md">
+                    <q-form @submit="onSubmitForm" class="q-col-gutter-md">
                         <q-option-group v-model="panel" inline :options="[
                             { label: '1.ข้อมูลส่วนตัว', value: 'tab1' },
                             { label: '2.ประวัติการศึกษา', value: 'tab2' },
@@ -26,97 +26,134 @@
                             { label: '4.ความสามารถพิเศษ', value: 'tab4' }
                         ]" style="padding-bottom: 10px" />
                         <q-tab-panels v-model="panel" animated class="rounded-borders" style="padding-top: 0px;">
-
                             <q-tab-panel name="tab1">
                                 <q-card class="flat no-shadow no-border" style="padding: 10px;">
-                                    <!-- <q-form class="q-col-gutter-md"> -->
-                                    <div class="col-12 col-md-4">
-                                        <q-input label="ชื่อชมรม/สมาคม" hint="โปรดระบุชื่อชมรม/สมาคม">
-                                            <template v-slot:append>
-                                                <q-icon name="search" class="cursor-pointer">
-                                                    <q-popup-proxy cover transition-show="scale"
-                                                        transition-hide="scale">
-
-                                                    </q-popup-proxy>
-                                                </q-icon>
-                                            </template>
-                                        </q-input>
-
+                                    <div class="row q-col-gutter-md">
+                                        <div class="col-12 col-md-4">
+                                            <q-input v-model="committeeRecord.clubid" label="รหัสชมรม" readonly />
+                                        </div>
+                                        <div class="col-12 col-md-4">
+                                            <q-input v-model="searchedclubName" label="ชื่อชมรม/สมาคม" hint="โปรดระบุชื่อชมรม/สมาคม">
+                                                <template v-slot:append>
+                                                    <q-icon name="search" @click="fetchClubName" />
+                                                    <q-menu touch-position transition-show="scale"
+                                                        transition-hide="scale" class="my-popup-width">
+                                                        <q-list class="my-popup-width">
+                                                            <q-item clickable v-close-popup
+                                                                v-for="item in clubname" :key="item"
+                                                                @click="onSelectClub(item)">
+                                                                <q-item-section v-for="(value, key) in item" :key="key">
+                                                                    {{ value }}
+                                                                    <q-separator />
+                                                                </q-item-section>
+                                                            </q-item>
+                                                        </q-list>
+                                                    </q-menu>
+                                                </template>
+                                            </q-input>
+                                        </div>
+                                        <div class="col-12 col-md-4">
+                                            <q-select label="ตำแหน่งในชมรม" v-model="committeeRecord.reponsibility"
+                                                transition-show="scale" transition-hide="scale" filled
+                                                :options="propertiesStore.ResponseType"
+                                                style="width: auto; padding-top: 2px;" />
+                                            <!-- <q-input v-model="committeeRecord.reponsibility" label="ตำแหน่งในชมรม" readonly /> -->
+                                        </div>
                                     </div>
 
                                     <div class="text-h6" style="padding-top: 10px">ข้อมูลส่วนส่วนตัว</div>
                                     <div class="row q-col-gutter-md">
                                         <div class="col-12 col-md-4">
-                                            <q-input label="ชื่อ" />
+                                            <q-input v-model="committeeRecord.name" label="ชื่อ" />
                                         </div>
                                         <div class="col-12 col-md-4">
-                                            <q-input label="นามสกุล" />
+                                            <q-input v-model="committeeRecord.surname" label="นามสกุล" />
                                         </div>
                                         <div class="col-12 col-md-4">
-                                            <q-input label="ตำแหน่ง" />
-                                        </div>
-                                    </div>
-                                    <div class="row q-col-gutter-md">
-                                        <div class="col-12 col-md-4">
-                                            <q-input label="สัญชาติ" />
-                                        </div>
-                                        <div class="col-12 col-md-4">
-                                            <q-input label="เชื่อชาติ" />
-                                        </div>
-                                        <div class="col-12 col-md-4">
-                                            <q-input label="ศาสนา" />
+                                            <q-input v-model="committeeRecord.occupation" label="ประกอบอาชีพ" />
                                         </div>
                                     </div>
                                     <div class="row q-col-gutter-md">
                                         <div class="col-12 col-md-4">
-                                            <q-input label="สถานภาพ" />
+                                            <q-input v-model="committeeRecord.nationality" label="สัญชาติ" />
                                         </div>
                                         <div class="col-12 col-md-4">
-                                            <q-input label="วันเกิด" mask="####-##-##" hint="Mask: YYYY-MM-DD">
+                                            <q-input v-model="committeeRecord.ethnicity" label="เชื่อชาติ" />
+                                        </div>
+                                        <div class="col-12 col-md-4">
+                                            <q-input v-model="committeeRecord.religion" label="ศาสนา" />
+                                        </div>
+                                    </div>
+                                    <div class="row q-col-gutter-md">
+                                        <div class="col-12 col-md-4">
+                                            <q-select label="สถานภาพ" v-model="committeeRecord.personalstatus"
+                                                transition-show="scale" transition-hide="scale" filled
+                                                :options="propertiesStore.PersonalStatus"
+                                                style="width: auto; padding-top: 15px;" />
+                                            <!-- <q-input v-model="committeeRecord.personalstatus" label="สถานภาพ" /> -->
+                                        </div>
+                                        <div class="col-12 col-md-4">
+                                            <q-input v-model="committeeRecord.birthdate" label="วันเกิด"
+                                                mask="####-##-##" hint="Mask: YYYY-MM-DD">
                                                 <template v-slot:append>
                                                     <q-icon name="event" class="cursor-pointer">
                                                         <q-popup-proxy cover transition-show="scale"
                                                             transition-hide="scale">
-                                                            <q-date mask="YYYY-MM-DD" />
+                                                            <q-date v-model="committeeRecord.birthdate"
+                                                                mask="YYYY-MM-DD" />
                                                         </q-popup-proxy>
                                                     </q-icon>
                                                 </template>
                                             </q-input>
                                         </div>
                                         <div class="col-12 col-md-4">
-                                            <q-input label="เบอร์โทรศัพท์" />
+                                            <q-input v-model="committeeRecord.phoneno" label="เบอร์โทรศัพท์" />
                                         </div>
                                         <div class="col-12 col-md-4">
-                                            <q-input label="Email" />
+                                            <q-input v-model="committeeRecord.email" label="Email" />
                                         </div>
                                     </div>
                                     <div class="text-h6" style="padding-top: 10px">ข้อมูลบัตรประชาชน</div>
                                     <div class="row q-col-gutter-md">
                                         <div class="col-12 col-md-4">
-                                            <q-input label="หมายเลขบัตรประชาชน" />
+                                            <q-input v-model="committeeRecord.licenseno" label="หมายเลขบัตรประชาชน"
+                                                :rules="[
+                                                    (val) =>
+                                                        (val && propertiesStore.checkThaiID(val)) || 'หมายเลขบัตรประชาชนไม่ถูกต้อง',
+                                                ]" />
                                         </div>
                                         <div class="col-12 col-md-4">
-                                            <q-input label="ออกให้ ณ" />
+                                            <q-input v-model="committeeRecord.licensecardissuedplace"
+                                                label="ออกให้ ณ" />
                                         </div>
+                                    </div>
+                                    <div class="row q-col-gutter-md">
                                         <div class="col-12 col-md-4">
-                                            <q-input label="วันที่ออกบัตร" mask="####-##-##" hint="Mask: YYYY-MM-DD">
+                                            <q-input v-model="committeeRecord.licensecardissueddate"
+                                                label="วันที่ออกบัตร" mask="####-##-##" hint="Mask: YYYY-MM-DD">
                                                 <template v-slot:append>
                                                     <q-icon name="event" class="cursor-pointer">
                                                         <q-popup-proxy cover transition-show="scale"
                                                             transition-hide="scale">
-                                                            <q-date mask="YYYY-MM-DD" />
+                                                            <q-date v-model="committeeRecord.licensecardissueddate"
+                                                                mask="YYYY-MM-DD" />
                                                         </q-popup-proxy>
                                                     </q-icon>
                                                 </template>
                                             </q-input>
                                         </div>
                                         <div class="col-12 col-md-4">
-                                            <q-input label="วันหมตอายุ" mask="####-##-##" hint="Mask: YYYY-MM-DD">
+                                            <q-input v-model="committeeRecord.licensecardexpireddate" label="วันหมตอายุ"
+                                                mask="####-##-##" hint="Mask: YYYY-MM-DD" :rules="[
+                                                    (val) =>
+                                                        (val && committeeRecord.licensecardexpireddate > committeeRecord.licensecardissueddate) || 'วันที่หมดอายุน้อยกว่าวันออกบัตร!',
+                                                ]">
                                                 <template v-slot:append>
                                                     <q-icon name="event" class="cursor-pointer">
                                                         <q-popup-proxy cover transition-show="scale"
                                                             transition-hide="scale">
-                                                            <q-date mask="YYYY-MM-DD" />
+                                                            <q-date v-model="committeeRecord.licensecardexpireddate"
+                                                                mask="YYYY-MM-DD" />
                                                         </q-popup-proxy>
                                                     </q-icon>
                                                 </template>
@@ -126,54 +163,115 @@
                                     <div class="text-h6" style="padding-top: 10px">ที่อยู่</div>
                                     <div class="row q-col-gutter-md">
                                         <div class="col-12 col-md-4">
-                                            <q-input label="บ้านเลขที่" />
+                                            <q-input v-model="committeeRecord.homeno" label="บ้านเลขที่" />
                                         </div>
                                         <div class="col-12 col-md-4">
-                                            <q-input label="หมู่ที่" />
+                                            <q-input v-model="committeeRecord.moo" label="หมู่ที่" />
                                         </div>
                                         <div class="col-12 col-md-4">
-                                            <q-input label="ตำบล/แขวง" />
+                                            <q-input v-model="committeeRecord.tambon" label="ตำบล/แขวง" />
                                         </div>
                                         <div class="col-12 col-md-4">
-                                            <q-input label="อำเภอ/เขต" />
+                                            <q-input v-model="committeeRecord.district" label="อำเภอ/เขต" />
                                         </div>
                                         <div class="col-12 col-md-4">
-                                            <q-input label="จังหวัด" />
+                                            <q-input v-model="committeeRecord.province" label="จังหวัด" />
                                         </div>
                                         <div class="col-12 col-md-4">
-                                            <q-input label="รหัสไปรษณีย์" />
+                                            <q-input v-model="committeeRecord.zipcode" label="รหัสไปรษณีย์"
+                                                mask="#####">
+                                                <template v-slot:append>
+                                                    <q-icon name="search" @click="fetchAddresses(1)" />
+                                                    <q-menu touch-position transition-show="scale"
+                                                        transition-hide="scale">
+                                                        <q-list class="my-popup-width">
+                                                            <q-item clickable v-close-popup
+                                                                v-for="item in addresses.message" :key="item"
+                                                                @click="onSelectAddress(1, item)">
+                                                                <q-item-section v-for="(value, key) in item" :key="key">
+                                                                    {{ value }}
+                                                                    <q-separator />
+                                                                </q-item-section>
+                                                            </q-item>
+                                                        </q-list>
+                                                    </q-menu>
+                                                </template>
+                                            </q-input>
                                         </div>
                                     </div>
                                     <div class="text-h6" style="padding-top: 10px">สถานที่ติดต่อได้สะดวก</div>
-                                    <q-checkbox v-model="useCurrentAddressToContact"
+                                    <q-checkbox v-model="useCurrentAddressToContact" @click="onCheckAlternativeAddress"
                                         label="ใช้ที่อยู่เดียวกันกับที่อยู่ด้านบน" />
                                     <div class="row q-col-gutter-md">
                                         <div class="col-12 col-md-4">
-                                            <q-input label="บ้านเลขที่" />
+                                            <q-input v-model="committeeRecord.alternativehomeno" label="บ้านเลขที่" />
                                         </div>
                                         <div class="col-12 col-md-4">
-                                            <q-input label="หมู่ที่" />
+                                            <q-input v-model="committeeRecord.alternativemoo" label="หมู่ที่" />
                                         </div>
                                         <div class="col-12 col-md-4">
-                                            <q-input label="ตำบล/แขวง" />
+                                            <q-input v-model="committeeRecord.alternativetambon" label="ตำบล/แขวง" />
                                         </div>
                                         <div class="col-12 col-md-4">
-                                            <q-input label="อำเภอ/เขต" />
+                                            <q-input v-model="committeeRecord.alternativedistrict" label="อำเภอ/เขต" />
                                         </div>
                                         <div class="col-12 col-md-4">
-                                            <q-input label="จังหวัด" />
+                                            <q-input v-model="committeeRecord.alternativeprovince" label="จังหวัด" />
                                         </div>
                                         <div class="col-12 col-md-4">
-                                            <q-input label="รหัสไปรษณีย์" />
+                                            <q-input v-model="committeeRecord.alternativezipcode" label="รหัสไปรษณีย์"
+                                                mask="#####">
+                                                <template v-slot:append>
+                                                    <q-icon name="search" @click="fetchAddresses(2)" />
+                                                    <q-menu touch-position transition-show="scale"
+                                                        transition-hide="scale">
+                                                        <q-list class="my-popup-width">
+                                                            <q-item clickable v-close-popup
+                                                                v-for="item in addresses.message" :key="item"
+                                                                @click="onSelectAddress(2, item)">
+                                                                <q-item-section v-for="(value, key) in item" :key="key">
+                                                                    {{ value }}
+                                                                    <q-separator />
+                                                                </q-item-section>
+                                                            </q-item>
+                                                        </q-list>
+                                                    </q-menu>
+                                                </template>
+                                            </q-input>
+                                        </div>
+                                    </div>
+                                    <div class="text-h6" style="padding-top: 10px">ข้อมูลบิดา/มารดา</div>
+                                    <div class="row q-col-gutter-md">
+                                        <div class="col-12 col-md-4">
+                                            <q-input v-model="committeeRecord.fathername" label="ชื่อบิดา" />
+                                        </div>
+                                        <div class="col-12 col-md-4">
+                                            <q-input v-model="committeeRecord.fatheroccupation" label="อาชีพ" />
+                                        </div>
+                                        <div class="col-12 col-md-4">
+                                            <q-input v-model="committeeRecord.fatherage" label="อายุ(ปี)" mask="###" />
+                                        </div>
+                                    </div>
+                                    <div class="row q-col-gutter-md">
+                                        <div class="col-12 col-md-4">
+                                            <q-input v-model="committeeRecord.mothername" label="ชื่อมารดา" />
+                                        </div>
+                                        <div class="col-12 col-md-4">
+                                            <q-input v-model="committeeRecord.motheroccupation" label="อาชีพ" />
+                                        </div>
+                                        <div class="col-12 col-md-4">
+                                            <q-input v-model="committeeRecord.motherage" label="อายุ(ปี)" mask="###" />
                                         </div>
                                     </div>
                                     <div class="text-h6" style="padding-top: 10px">ข้อมูลเกี่ยวกับความพิการ</div>
                                     <div class="row q-col-gutter-md">
                                         <div class="col-12 col-md-4">
-                                            <q-input label="เลขที่บัตรประจำตัวผู้พิการ (ถ้ามี)" />
+                                            <q-input v-model="committeeRecord.disabilitycardno"
+                                                label="เลขที่บัตรประจำตัวผู้พิการ (ถ้ามี)" />
                                         </div>
                                         <div class="col-12 col-md-4">
-                                            <q-input label="เป็นผู้ดูแลคนพิการ ชื่อ/สกุล" />
+                                            <q-input v-model="committeeRecord.disabledpersonnameincare"
+                                                label="เป็นผู้ดูแลคนพิการ ชื่อ/สกุล" />
                                         </div>
                                     </div>
                                     <!-- </q-form> -->
@@ -190,7 +288,8 @@
 
                                     <template v-slot:body-cell-actions="props">
                                         <q-td :props="props">
-                                            <q-btn flat round class="text-red" icon="delete" @click="removeEducation(props.row)"></q-btn>
+                                            <q-btn flat round class="text-red" icon="delete"
+                                                @click="removeEducation(props.row)"></q-btn>
                                         </q-td>
                                     </template>
                                     <template v-slot:loading>
@@ -211,7 +310,8 @@
 
                                     <template v-slot:body-cell-actions="props">
                                         <q-td :props="props">
-                                            <q-btn flat round class="text-red" icon="delete" @click="removeExperience(props.row)"></q-btn>
+                                            <q-btn flat round class="text-red" icon="delete"
+                                                @click="removeExperience(props.row)"></q-btn>
                                         </q-td>
                                     </template>
                                     <template v-slot:loading>
@@ -230,7 +330,8 @@
                                     row-key="name" :loading="loading">
                                     <template v-slot:body-cell-actions="props">
                                         <q-td :props="props">
-                                            <q-btn flat round class="text-red" icon="delete" @click="removeTalent(props.row)"></q-btn>
+                                            <q-btn flat round class="text-red" icon="delete"
+                                                @click="removeTalent(props.row)"></q-btn>
                                         </q-td>
                                     </template>
                                     <template v-slot:loading>
@@ -280,8 +381,7 @@
                 </q-card-section>
                 <q-card-section>
                     <q-select label="ระดับความสามารถ" v-model="newTalent.talentlevel" transition-show="scale"
-                        transition-hide="scale" filled :options="propertiesStore.TalentLevel"
-                        style="width: 350px" />
+                        transition-hide="scale" filled :options="propertiesStore.TalentLevel" style="width: 350px" />
                 </q-card-section>
                 <q-card-actions align="right">
                     <q-btn flat label="Save" color="primary" @click="saveTalent" />
@@ -293,23 +393,74 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { useQuasar } from 'quasar';
 import { usePropertiesStore } from 'src/stores/properties';
+import { useClubStore } from 'src/stores/clubs';
+import axios from 'axios';
 
 const propertiesStore = usePropertiesStore();
+const clubStore = useClubStore();
 const $q = useQuasar();
 const useCurrentAddressToContact = ref(false)
 const eduDialog = ref(false)
 const expDialog = ref(false)
 const talentDialog = ref(false)
+const searchedclubName = ref('')
+const searchedcommitteeName = ref('')
 const newEducation = ref({ educationlevel: '', major: '', graduatedyear: '', institute: '' });
 const newExperience = ref({ responsibility: '', duration: '', organization: '' });
 const newTalent = ref({ talentlevel: '', description: '' });
 const educationList = ref([])
 const experienceList = ref([])
 const talentList = ref([])
+const addresses = ref([])
+const clubname = ref([])
 const panel = ref('tab1')
+const committeeRecord = ref({
+    committeeid: '',
+    clubid: '',
+    name: '',
+    surname: '',
+    nationality: 'ไทย',
+    ethnicity: 'ไทย',
+    personalstatus: '',
+    birthdate: '',
+    licenseno: '',
+    licensecardissueddate: '',
+    licensecardexpireddate: '',
+    licensecardissuedplace: '',
+    phoneno: '',
+    email: '',
+    faxno: '',
+    fathername: '',
+    mothername: '',
+    disabilitycardno: '',
+    relatedmemberid: '',
+    fatheroccupation: '',
+    motheroccupation: '',
+    reponsibility: '',
+    religion: 'พุทธ',
+    fatherage: '',
+    motherage: '',
+    homeno: '',
+    moo: '',
+    tambon: '',
+    district: '',
+    province: '',
+    zipcode: '',
+    alternativehomeno: '',
+    alternativemoo: '',
+    alternativetambon: '',
+    alternativedistrict: '',
+    alternativeprovince: '',
+    alternativezipcode: '',
+    disabledpersonnameincare: '',
+    occupation: '',
+    educations: [],
+    experiences: [],
+    talents: []
+})
 const eduColumns = [
     {
         name: "educationlevel",
@@ -398,7 +549,7 @@ const addEducation = async () => {
 const addExperience = async () => {
     expDialog.value = true;
 }
-const addTalent = async ()=> {
+const addTalent = async () => {
     talentDialog.value = true;
 }
 const saveEducation = async () => {
@@ -422,13 +573,86 @@ const removeEducation = async (edu) => {
 const removeExperience = async (exp) => {
     experienceList.value = experienceList.value.filter((ex) => ex.organization !== exp.organization);
 }
-const removeTalent= async (tal) => {
+const removeTalent = async (tal) => {
     talentList.value = talentList.value.filter((t) => t.description !== tal.description);
+}
+const onCheckAlternativeAddress = (isChecked) => {
+    if (useCurrentAddressToContact.value == true) {
+        committeeRecord.value.alternativemoo = committeeRecord.value.moo;
+        committeeRecord.value.alternativehomeno = committeeRecord.value.homeno;
+        committeeRecord.value.alternativetambon = committeeRecord.value.tambon;
+        committeeRecord.value.alternativedistrict = committeeRecord.value.district;
+        committeeRecord.value.alternativeprovince = committeeRecord.value.province;
+        committeeRecord.value.alternativezipcode = committeeRecord.value.zipcode;
+    } else {
+        committeeRecord.value.alternativemoo = '';
+        committeeRecord.value.alternativehomeno = '';
+        committeeRecord.value.alternativetambon = '';
+        committeeRecord.value.alternativedistrict = '';
+        committeeRecord.value.alternativeprovince = '';
+        committeeRecord.value.alternativezipcode = '';
+    }
+}
+const fetchClubName = async () => {
+    try {
+        const response = await clubStore.getClubByName(searchedclubName.value);
+        clubname.value = clubStore.listclubname;
+//        console.log('club name:', clubname.value)
+    } catch (err) {
+        clubname.value = []
+        alert(err)
+    }
+}
+const onSelectClub = (clubinfo) => {
+    committeeRecord.value.clubid = clubinfo.clubid
+    searchedclubName.value = clubinfo.clubname
+}
+
+const fetchAddresses = async (addrno) => {
+    let findzipcode;
+    if (addrno == 1) findzipcode = committeeRecord.value.zipcode
+    else findzipcode = committeeRecord.value.alternativezipcode
+
+    try {
+        const response = await axios.get(`${propertiesStore.ApiServer}/${propertiesStore.ApiVersion}/locations/${findzipcode}`);
+        addresses.value = response.data;
+    } catch (err) {
+        addresses.value = []
+        alert(err)
+    }
+};
+const onSelectAddress = (addrno, address) => {
+    //console.log(address)
+    if (addrno == 1) {
+        committeeRecord.value.tambon = address.TambonThai;
+        committeeRecord.value.province = address.ProvinceThai;
+        committeeRecord.value.district = address.DistrictThai;
+        if (useCurrentAddressToContact.value == true) {
+            committeeRecord.value.alternativemoo = committeeRecord.value.moo;
+            committeeRecord.value.alternativehomeno = committeeRecord.value.homeno;
+            committeeRecord.value.alternativetambon = committeeRecord.value.tambon;
+            committeeRecord.value.alternativedistrict = committeeRecord.value.district;
+            committeeRecord.value.alternativeprovince = committeeRecord.value.province;
+            committeeRecord.value.alternativezipcode = committeeRecord.value.zipcode;
+        }
+    } else {
+        committeeRecord.value.alternativetambon = address.TambonThai;
+        committeeRecord.value.alternativeprovince = address.ProvinceThai;
+        committeeRecord.value.alternativedistrict = address.DistrictThai;
+    }
+};
+const onSubmitForm = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", "Bearer " + accountStore.user.token)
 }
 
 </script>
 
 <style lang="sass">
+.my-popup-width 
+    width: 400px
+
 .toolbar-input-btn
     border-radius: 10
     border-style: solid

@@ -78,8 +78,8 @@ import { onMounted, ref } from "vue";
 import { useAccountStore } from "src/stores/account";
 import { usePropertiesStore } from "src/stores/properties";
 import { useQuasar } from "quasar";
-
 import axios from 'axios';
+
 const addresses = ref([]);
 
 const q = useQuasar();
@@ -124,8 +124,13 @@ const currentDate = () => {
 }
 
 const fetchAddresses = async () => {
-    const response = await axios.get(`${propertiesStore.ApiServer}/${propertiesStore.ApiVersion}/locations/${formClub.value.zipcode}`);
-    addresses.value = response.data;
+    try {
+        const response = await axios.get(`${propertiesStore.ApiServer}/${propertiesStore.ApiVersion}/locations/${formClub.value.zipcode}`);
+        addresses.value = response.data;
+    } catch (err) {
+        addresses.value = []
+        alert(err)
+    }
 };
 const onSelectAddress = (address) => {
     //console.log(address)
