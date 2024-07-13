@@ -1,16 +1,16 @@
 <template>
   <q-card class="edit-account-card">
     <q-card-section class="bg-grey-4 q-pa-md">
-      <div class="text-h6">Edit User Account</div>
+      <div class="text-h6">แก้ไขข้อมูลผู้ใช้</div>
       <div class="text-subtitle1">
-        Fill out the following form to update your account.
+        กรุณากรอกข้อมูลลงในแบบฟอร์มให้ครบถ้วนเพื่อการแก้ไข
       </div>
     </q-card-section>
     <q-separator inset />
     <q-form @submit="onSubmitForm">
       <q-card-section class="column q-gutter-md">
         <q-input
-          label="User Name *"
+          label="ชื่อผู้ใช้ "
           v-model="formAccount.username"
           :rules="[
             (val) => (val && val.length > 0) || 'Name must be filled in.',
@@ -23,7 +23,7 @@
           :rules="[(val) => validateEmail(val) || 'Must be a valid email.']"
         ></q-input>
         <q-select
-          label="Role"
+          label="บทบาท/หน้าที่"
           v-model="formAccount.role"
           transition-show="scale"
           transition-hide="scale"
@@ -32,7 +32,7 @@
           style="width: 250px"
         />
         <q-select
-          label="Status"
+          label="สถานะ"
           v-model="formAccount.status"
           transition-show="scale"
           transition-hide="scale"

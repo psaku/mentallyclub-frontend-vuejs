@@ -18,18 +18,18 @@
           
           <q-tooltip>Account</q-tooltip>
           <q-menu auto-close>
-            <q-list dense style="min-width: 150px">
+            <q-list dense style="min-width: 200px">
               <q-item clickable>
-                <q-item-section>
+                <q-item-section style="padding: 10px;">
                   <div>
                     <q-icon name="account_box" color="blue-9" size="18px" />
-                    แก้ไขข้อมูลส่วนตัว
+                    เปลี่ยนรหัสผ่าน
                   </div>
                 </q-item-section>
               </q-item>
               <q-separator />
               <q-item clickable @click="logout()">
-                <q-item-section>
+                <q-item-section style="padding: 10px;">
                   <div>
                     <q-icon name="logout" color="blue-9" size="18px" />
                     ออกจากระบบ

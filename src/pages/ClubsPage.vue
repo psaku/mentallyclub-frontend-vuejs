@@ -237,8 +237,8 @@ const onDelete = (ev) => {
 
       <template v-slot:body-cell-actions="props">
         <q-td :props="props">
-          <q-btn icon="mode_edit" @click="onEdit(props.row)"></q-btn>
-          <q-btn icon="delete" @click="onDelete(props.row)"></q-btn>
+          <q-btn icon="mode_edit" class="text-blue-8" @click="onEdit(props.row)"></q-btn>
+          <q-btn icon="delete" class="text-red-6" @click="onDelete(props.row)"></q-btn>
         </q-td>
       </template>
       <template v-slot:loading>

@@ -1,13 +1,13 @@
 <template>
     <div class="q-pa-md">
         <q-layout view="lHh lpr lFf" container class="window-height shadow-2 rounded-borders">
-            <q-header elevated class="bg-blue-6">
+            <q-header elevated class="bg-primary">
                 <q-toolbar>
                     <q-btn flat round dense icon="storage" class="q-mr-sm" />
                     <q-toolbar-title>บันทึกข้อมูลกรรมการและที่ปรึกษา</q-toolbar-title>
                     <q-space />
                     <div class="q-pl-sm toolbar-input-btn row no-wrap">
-                        <q-input dense v-model="searchedcommitteeName" placeholder="Search name" class="bg-white col" />
+                        <q-input dense v-model="searchedcommitteeName" placeholder=" กรุณาระบุชื่อผู้ที่ต้องการค้นหา" class="bg-white col" />
                         <!-- <q-btn color="grey-3" text-color="grey-8" icon="search" unelevated /> -->
                         <q-btn flat round dense icon="search" class="q-mr-xs" />
                     </div>
@@ -414,9 +414,9 @@ const expDialog = ref(false)
 const talentDialog = ref(false)
 const searchedclubName = ref('ทดสอบ')
 const searchedcommitteeName = ref('')
-const newEducation = ref({ educationlevel: '', major: '', graduatedyear: '', institute: '' });
-const newExperience = ref({ responsibility: '', duration: '', organization: '' });
-const newTalent = ref({ talentlevel: '', description: '' });
+const newEducation = ref({ committeeid: '', educationlevel: '', major: '', graduatedyear: '', institute: '' });
+const newExperience = ref({ committeeid: '', responsibility: '', duration: '', organization: '' });
+const newTalent = ref({ committeeid: '', talentlevel: '', description: '' });
 const educationList = ref([])
 const experienceList = ref([])
 const talentList = ref([])

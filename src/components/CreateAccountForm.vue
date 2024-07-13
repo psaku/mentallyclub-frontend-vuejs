@@ -1,16 +1,16 @@
 <template>
   <q-card class="create-account-card">
     <q-card-section class="bg-primary text-grey-2 q-pa-md">
-      <div class="text-h6">Create New Account</div>
+      <div class="text-h6">สร้างข้อมูลผู้ใช้ใหม่</div>
       <div class="text-subtitle1">
-        Fill out the following form to create your new account.
+        กรุณากรอกข้อมูลลงในแบบฟอร์มให้ครบถ้วนเพื่อสร้างข้อมูลผู้ใช้ใหม่
       </div>
     </q-card-section>
     <q-separator inset />
     <q-form @submit="onSubmitForm">
       <q-card-section class="column q-gutter-md">
         <q-input
-          label="User Name *"
+          label="ชื่อผู้ใช้ที่ต้องการ *"
           v-model="formAccount.username"
           :rules="[
             (val) => (val && val.length > 0) || 'Name must be filled in.',
@@ -22,7 +22,7 @@
           :rules="[(val) => validateEmail(val) || 'Must be a valid email.']"
         ></q-input>
         <q-select
-          label="Role"
+          label="บทบาท/หน้าที่"
           v-model="formAccount.role"
           transition-show="scale"
           transition-hide="scale"
@@ -56,28 +56,28 @@
               :name="validPassword.length ? 'check_circle' : 'block'"
               :color="validPassword.length ? 'positive' : 'negative'"
             ></q-icon>
-            Must be at least 10 characters long.
+            รหัสผ่านต้องมีความยาวอย่างน้อย 10 ตัวอักษร
           </div>
           <div>
             <q-icon
               :name="validPassword.capital ? 'check_circle' : 'block'"
               :color="validPassword.capital ? 'positive' : 'negative'"
             ></q-icon>
-            Must contain at least one capital letter.
+            ต้องมีตัวอักษรตัวใหญ่อย่างน้อย 1 ตัว
           </div>
           <div>
             <q-icon
               :name="validPassword.number ? 'check_circle' : 'block'"
               :color="validPassword.number ? 'positive' : 'negative'"
             ></q-icon>
-            Must contain at least one number.
+            ต้องมีตัวเลขอย่างน้อย 1 ตัว
           </div>
           <div>
             <q-icon
               :name="validPassword.symbol ? 'check_circle' : 'block'"
               :color="validPassword.symbol ? 'positive' : 'negative'"
             ></q-icon>
-            Must contain at least one symbol.
+            ต้องมีอักขระพิเศษเช่น [!@#$%&] หรืออื่น ๆ อย่างน้อย 1 ตัว
           </div>
         </div>
       </q-card-section>
