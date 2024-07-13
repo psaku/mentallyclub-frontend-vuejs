@@ -142,7 +142,7 @@ const onCancel = () => {}
 const onSubmitForm = () => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("Authorization", "Bearer " + accountStore.user.token)
+//    myHeaders.append("Authorization", "Bearer " + accountStore.user.token)
     // console.log("Date: ", formClub.value.clubfoundingdate)
     var body = JSON.stringify({
         "clubname": formClub.value.clubname,
@@ -158,6 +158,7 @@ const onSubmitForm = () => {
     });
     var requestOptions = {
         method: 'POST',
+        credentials: 'include',
         headers: myHeaders,
         body: body,
         redirect: 'follow'

@@ -160,7 +160,7 @@ const onSelectAddress = (address) => {
 const onSubmitForm = () => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("Authorization", "Bearer " + accountStore.user.token)
+//    myHeaders.append("Authorization", "Bearer " + accountStore.user.token)
     // console.log("Date: ", formClub.value.clubfoundingdate)
     var body = JSON.stringify({
         "clubid": formClub.value.clubid,
@@ -177,6 +177,7 @@ const onSubmitForm = () => {
     });
     var requestOptions = {
         method: 'PUT',
+        credentials: 'include',
         headers: myHeaders,
         body: body,
         redirect: 'follow'

@@ -13,11 +13,12 @@ export const useUserStore = defineStore('users-info', {
       //console.log('token', jsondata.token);
       const myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
-      myHeaders.append("Authorization", `Bearer ${jsondata.token}`);
+//      myHeaders.append("Authorization", `Bearer ${jsondata.token}`);
 
       try {
         const response = await fetch(`${propertiesStore.ApiServer}/${propertiesStore.ApiVersion}/users`, {
           method: 'GET',
+          credentials: 'include',
           headers: myHeaders
         });
         if (!response.ok) {
@@ -39,11 +40,12 @@ export const useUserStore = defineStore('users-info', {
       //console.log('token', jsondata.token);
       const myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
-      myHeaders.append("Authorization", `Bearer ${jsondata.token}`);
+//      myHeaders.append("Authorization", `Bearer ${jsondata.token}`);
 
       try {
         const response = await fetch(`${propertiesStore.ApiServer}/${propertiesStore.ApiVersion}/users/${name}`, {
           method: 'DELETE',
+          credentials: 'include',
           headers: myHeaders
         });
         if (!response.ok) {

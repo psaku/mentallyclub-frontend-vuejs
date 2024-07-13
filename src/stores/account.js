@@ -27,6 +27,7 @@ export const useAccountStore = defineStore('user-account', {
       try {
         const response = await fetch(`${propertiesStore.ApiServer}/${propertiesStore.ApiVersion}/login`, {
           method: 'POST',
+          credentials: 'include',
           headers: myHeaders,
           body: JSON.stringify(userInfo),
         });
@@ -44,8 +45,8 @@ export const useAccountStore = defineStore('user-account', {
         this.user.email = res.email
         this.user.role = res.role
         this.user.lastaccessed = res.lastaccessed
-        localStorage.setItem('user-profile', JSON.stringify(this.user))
-        //console.log(this.user)
+//        localStorage.setItem('user-profile', JSON.stringify(this.user))
+        
       } catch (error) {
         //alert(error + ' or Could not connect to the server.')
         return (error + '/ or Could not connect to the server.')
@@ -56,12 +57,13 @@ export const useAccountStore = defineStore('user-account', {
       try {
         const response = await fetch(`${propertiesStore.ApiServer}/${propertiesStore.ApiVersion}/logout`,{
           method: 'GET',
+          credentials: 'include',
           headers: { Authorization: `Bearer ${this.user.token}` }
         });
         this.isLoggedIn = false
         this.isAdmin = false
         this.user.username = ''      
-        localStorage.removeItem('user-profile')  
+//        localStorage.removeItem('user-profile')  
       } catch (error) {
         console.error('Error calling logout:', error);
       }

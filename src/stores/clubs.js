@@ -15,11 +15,12 @@ export const useClubStore = defineStore('clubs-info', {
       //console.log('token', jsondata.token);
       const myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
-      myHeaders.append("Authorization", `Bearer ${jsondata.token}`);
+//      myHeaders.append("Authorization", `Bearer ${jsondata.token}`);
 
       try {
         const response = await fetch(`${propertiesStore.ApiServer}/${propertiesStore.ApiVersion}/clubs`, {
           method: 'GET',
+          credentials: 'include',
           headers: myHeaders
         });
         if (!response.ok) {
@@ -54,11 +55,12 @@ export const useClubStore = defineStore('clubs-info', {
       //console.log('token', jsondata.token);
       const myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
-      myHeaders.append("Authorization", `Bearer ${jsondata.token}`);
+//      myHeaders.append("Authorization", `Bearer ${jsondata.token}`);
 
       try {
         const response = await fetch(`${propertiesStore.ApiServer}/${propertiesStore.ApiVersion}/clubsbyname/${name}`, {
           method: 'GET',
+          credentials: 'include',
           headers: myHeaders
         });
         if (!response.ok) {
@@ -84,11 +86,12 @@ export const useClubStore = defineStore('clubs-info', {
       //console.log('token', jsondata.token);
       const myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
-      myHeaders.append("Authorization", `Bearer ${jsondata.token}`);
+//      myHeaders.append("Authorization", `Bearer ${jsondata.token}`);
 
       try {
         const response = await fetch(`${propertiesStore.ApiServer}/${propertiesStore.ApiVersion}/clubs/${id}`, {
           method: 'DELETE',
+          credentials: 'include',
           headers: myHeaders
         });
         if (!response.ok) {

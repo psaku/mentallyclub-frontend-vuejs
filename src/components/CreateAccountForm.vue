@@ -151,7 +151,7 @@ const onCancel = () => {}
 const onSubmitForm = () => {
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
-  myHeaders.append("Authorization", "Bearer " + accountStore.user.token)
+//  myHeaders.append("Authorization", "Bearer " + accountStore.user.token)
 
   var body = JSON.stringify({
     "username": formAccount.value.username,
@@ -162,6 +162,7 @@ const onSubmitForm = () => {
   });
   var requestOptions = {
     method: 'POST',
+    credentials: 'include',
     headers: myHeaders,
     body: body,
     redirect: 'follow'
