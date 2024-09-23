@@ -1,4 +1,4 @@
-# MentallityClub (mentallity-club-frontend)
+# MentallyClub (mentally-club-frontend)
 
 A Mentallity Club Members data
 
